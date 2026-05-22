@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Title and SEO Meta Tags -->
+    <title>SoundVibe Analytics — Spotify listening statistics & music personality</title>
+    <meta name="description" content="Discover your music soul. Connect your Spotify to explore top tracks, listening heatmaps, mood scores, and get a shareable music personality card." />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!-- App Container -->
+    <div id="app">
+      
+      <!-- ============================================== -->
+      <!-- 1. LANDING PAGE                                -->
+      <!-- ============================================== -->
+      <main id="landing-page" class="landing-container">
+        <!-- Glowing background blobs -->
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+
+        <header class="landing-header">
+          <div class="logo-wrapper">
+            <span class="logo-text">SOUNDVIBE</span>
+            <span class="logo-dot">.</span>
+          </div>
+          <button id="btn-toggle-config" class="btn-secondary flex-center" aria-label="Spotify Credentials Settings">
+            <i data-lucide="settings" class="icon-sm"></i>
+            <span>Setup App</span>
+          </button>
+        </header>
+
+        <section class="hero-section">
+          <h1 class="hero-title">
+            Unlock Your <span class="gradient-text">Music Soul</span>.
+          </h1>
+          <p class="hero-subtitle">
+            Dive deep into your Spotify listening statistics. Explore top tracks, analysis heatmaps, mood analytics, and export a shareable personality card.
+          </p>
+
+          <div class="hero-actions">
+            <button id="btn-login-spotify" class="btn-primary flex-center">
+              <i data-lucide="disc" class="icon-spin"></i>
+              <span>Connect with Spotify</span>
+            </button>
+            <button id="btn-try-demo" class="btn-glass flex-center">
+              <i data-lucide="play" class="icon-sm"></i>
+              <span>Explore Demo Mode</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Features Showcase Grid -->
+        <section class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><i data-lucide="music"></i></div>
+            <h3>Top Tracks & Artists</h3>
+            <p>Track your absolute favorites across 4 weeks, 6 months, or your entire listening history.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i data-lucide="calendar"></i></div>
+            <h3>Listening Heatmap</h3>
+            <p>Analyze the hours of the day and days of the week when your headphones are most active.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i data-lucide="activity"></i></div>
+            <h3>Mood & Audio DNA</h3>
+            <p>Visualize your valence, energy, and acoustic properties based on track audio features.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i data-lucide="share-2"></i></div>
+            <h3>Shareable Persona</h3>
+            <p>Generate a high-fidelity aesthetic card showcasing your music soul to share with friends.</p>
+          </div>
+        </section>
+
+        <!-- Credentials Settings Modal (Sleek Glass Card) -->
+        <div id="config-modal" class="modal-overlay hidden">
+          <div class="modal-card glass-panel">
+            <div class="modal-header">
+              <h3>Spotify Developer API Setup</h3>
+              <button id="btn-close-config" class="btn-icon-only">&times;</button>
+            </div>
+            <div class="modal-body">
+              <p class="help-text">
+                To connect your real Spotify account, enter your own Spotify Developer Client ID. If you don't have one, use the <strong>Explore Demo Mode</strong> instead!
+              </p>
+              <div class="form-group">
+                <label for="client-id-input">Spotify Client ID</label>
+                <input type="text" id="client-id-input" placeholder="e.g. 8a4b3c2d1e..." />
+              </div>
+              <div class="form-group">
+                <label for="redirect-uri-input">Redirect URI</label>
+                <input type="text" id="redirect-uri-input" readonly />
+                <span class="input-tip">Ensure this exact URL is added to your Spotify Developer Dashboard under Redirect URIs.</span>
+              </div>
+              <button id="btn-save-config" class="btn-primary w-100">Save Configuration</button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- ============================================== -->
+      <!-- 2. DASHBOARD PAGE                              -->
+      <!-- ============================================== -->
+      <div id="dashboard-page" class="dashboard-container hidden">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar glass-panel">
+          <div class="sidebar-logo">
+            <span class="logo-text">SOUNDVIBE</span>
+            <span class="logo-dot">.</span>
+          </div>
+
+          <nav class="sidebar-nav">
+            <button class="nav-tab active" data-target="overview-tab">
+              <i data-lucide="disc"></i>
+              <span>Overview</span>
+            </button>
+            <button class="nav-tab" data-target="top-items-tab">
+              <i data-lucide="music"></i>
+              <span>Top Tracks & Artists</span>
+            </button>
+            <button class="nav-tab" data-target="search-tab">
+              <i data-lucide="search"></i>
+              <span>Search Music</span>
+            </button>
+            <button class="nav-tab" data-target="heatmap-tab">
+              <i data-lucide="calendar"></i>
+              <span>Listening Heatmap</span>
+            </button>
+            <button class="nav-tab" data-target="mood-tab">
+              <i data-lucide="activity"></i>
+              <span>Vibe & Mood DNA</span>
+            </button>
+            <button class="nav-tab" data-target="decade-tab">
+              <i data-lucide="clock"></i>
+              <span>Decade Time Machine</span>
+            </button>
+            <button class="nav-tab" data-target="matcher-tab">
+              <i data-lucide="users"></i>
+              <span>Vibe Matcher</span>
+            </button>
+            <button class="nav-tab" data-target="personality-tab">
+              <i data-lucide="share-2"></i>
+              <span>Music Personality</span>
+            </button>
+          </nav>
+
+          <div class="sidebar-footer">
+            <button id="btn-logout" class="btn-logout flex-center">
+              <i data-lucide="log-out" class="icon-sm"></i>
+              <span>Disconnect Spotify</span>
+            </button>
+          </div>
+        </aside>
+
+        <!-- Main Dashboard Content -->
+        <main class="dashboard-main">
+          
+          <!-- Top Profile Banner -->
+          <div id="user-profile-header">
+            <!-- Injected via ui.js -->
+          </div>
+
+          <!-- TAB CONTENT: OVERVIEW -->
+          <section id="overview-tab" class="tab-pane active">
+            <div class="dashboard-grid">
+              <!-- Summary Card 1 -->
+              <div class="summary-card glass-panel flex-row">
+                <div class="sum-icon text-green"><i data-lucide="disc"></i></div>
+                <div class="sum-details">
+                  <span class="sum-title">Top Artist</span>
+                  <h3 id="overview-top-artist" class="sum-value">-</h3>
+                </div>
+              </div>
+              <!-- Summary Card 2 -->
+              <div class="summary-card glass-panel flex-row">
+                <div class="sum-icon text-pink"><i data-lucide="music"></i></div>
+                <div class="sum-details">
+                  <span class="sum-title">Top Track</span>
+                  <h3 id="overview-top-track" class="sum-value">-</h3>
+                </div>
+              </div>
+              <!-- Summary Card 3 -->
+              <div class="summary-card glass-panel flex-row">
+                <div class="sum-icon text-blue"><i data-lucide="activity"></i></div>
+                <div class="sum-details">
+                  <span class="sum-title">Vibe Match</span>
+                  <h3 id="overview-music-vibe" class="sum-value">-</h3>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recently Played vs Quick Preview grid -->
+            <div class="quick-overview-row mt-4">
+              <div class="glass-panel flex-1">
+                <h3 class="panel-title mb-4">Recently Listened Tracks</h3>
+                <div id="recently-played-list" class="recent-list-container">
+                  <!-- Injected via ui.js -->
+                </div>
+              </div>
+              <div class="glass-panel flex-1 center-flex flex-column text-center glow-vibe-box">
+                <span class="panel-badge-glow">YOUR SOUL PERSONA</span>
+                <h2 id="overview-persona-title" class="persona-reveal-title mt-2">-</h2>
+                <p id="overview-persona-desc" class="persona-reveal-desc mt-2">-</p>
+                <button class="btn-primary mt-4 nav-tab-trigger" data-tab-target="personality-tab">
+                  <span>View Full Card</span>
+                  <i data-lucide="chevron-right" class="icon-sm"></i>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB CONTENT: TOP ITEMS -->
+          <section id="top-items-tab" class="tab-pane">
+            <div class="tab-controls-row">
+              <!-- Period Filters -->
+              <div class="filter-tabs" id="period-filters">
+                <button class="period-tab" data-period="short_term">Last 4 Weeks</button>
+                <button class="period-tab active" data-period="medium_term">Last 6 Months</button>
+                <button class="period-tab" data-period="long_term">All Time</button>
+              </div>
+
+              <!-- Top Tracks / Artists Toggle -->
+              <div class="category-toggle" id="category-toggles">
+                <button class="toggle-btn active" data-category="tracks">Tracks</button>
+                <button class="toggle-btn" data-category="artists">Artists</button>
+              </div>
+            </div>
+
+            <!-- List Grid View -->
+            <div class="items-view-container mt-4">
+              <!-- Tracks List Container -->
+              <div id="tracks-view" class="list-container glass-panel">
+                <div class="list-header">
+                  <div class="header-col rank">#</div>
+                  <div class="header-col art">Art</div>
+                  <div class="header-col info">Title & Artist</div>
+                  <div class="header-col album">Album</div>
+                  <div class="header-col pop">Popularity</div>
+                  <div class="header-col dur">Duration</div>
+                </div>
+                <div id="top-tracks-list">
+                  <!-- Injected via ui.js -->
+                </div>
+              </div>
+
+              <!-- Artists Grid Container -->
+              <div id="artists-view" class="artists-grid-container hidden">
+                <div id="top-artists-list" class="artists-grid">
+                  <!-- Injected via ui.js -->
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB CONTENT: HEATMAP -->
+          <section id="heatmap-tab" class="tab-pane">
+            <div class="glass-panel">
+              <h3 class="panel-title mb-2">Listening Habits Heatmap</h3>
+              <p class="panel-subtitle mb-6">Understand what hours of the day and days of the week you listen to music the most.</p>
+              
+              <!-- Metrics stats row -->
+              <div class="heatmap-stats-row mb-6">
+                <div class="heatmap-stat-item">
+                  <span class="label">Listening Time</span>
+                  <h3 id="heatmap-total-minutes">-</h3>
+                </div>
+                <div class="heatmap-stat-item">
+                  <span class="label">Total Playbacks Analyzed</span>
+                  <h3 id="heatmap-total-plays">-</h3>
+                </div>
+                <div class="heatmap-stat-item">
+                  <span class="label">Peak Hour</span>
+                  <h3 id="heatmap-peak-hour">-</h3>
+                </div>
+              </div>
+
+              <!-- Heatmap grid wrapper -->
+              <div class="heatmap-wrapper">
+                <div class="heatmap-hours-header">
+                  <div></div><!-- Spacer for days labels -->
+                  <div>12a</div><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div>
+                  <div>12p</div><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div>
+                </div>
+                <div id="heatmap-grid" class="heatmap-grid">
+                  <!-- Cells injected via ui.js -->
+                </div>
+                
+                <div class="heatmap-legend">
+                  <span>Less Active</span>
+                  <span class="legend-cell level-0"></span>
+                  <span class="legend-cell level-1"></span>
+                  <span class="legend-cell level-2"></span>
+                  <span class="legend-cell level-3"></span>
+                  <span class="legend-cell level-4"></span>
+                  <span>More Active</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB CONTENT: MOOD & DNA -->
+          <section id="mood-tab" class="tab-pane">
+            <div class="charts-row">
+              <!-- Radar Chart Container -->
+              <div class="glass-panel chart-card flex-1">
+                <h3 class="panel-title mb-4">Your Audio DNA</h3>
+                <div class="chart-container">
+                  <canvas id="radar-chart-canvas"></canvas>
+                </div>
+              </div>
+
+              <!-- Doughnut Chart Container -->
+              <div class="glass-panel chart-card flex-1">
+                <h3 class="panel-title mb-4">Genre Diversity</h3>
+                <div class="chart-container">
+                  <canvas id="doughnut-chart-canvas"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mood Summary Block -->
+            <div class="glass-panel mt-4 flex-row justify-between align-center mobile-column">
+              <div class="mood-vibe-meta">
+                <span class="section-label">CURRENT SOUND SIGNATURE</span>
+                <h2 id="mood-vibe-title" class="mood-vibe-title">-</h2>
+                <p id="mood-vibe-desc" class="mood-vibe-desc">-</p>
+              </div>
+              <div class="mood-graphic-indicator">
+                <span class="pulse-ring"></span>
+                <span class="pulse-ring ring-2"></span>
+                <div class="indicator-inner"><i data-lucide="activity"></i></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB CONTENT: DECADE TIME MACHINE -->
+          <section id="decade-tab" class="tab-pane">
+            <div class="glass-panel">
+              <h3 class="panel-title mb-2">Decade Time Machine</h3>
+              <p class="panel-subtitle mb-6">Voyage through the release eras of your favorite tracks and see what decades define your music soul.</p>
+              
+              <div class="decade-machine-row">
+                <!-- Left side: Spinning Vinyl & Era description -->
+                <div class="decade-visuals-panel flex-1 center-flex flex-column text-center">
+                  <div class="spinning-vinyl-wrapper mb-4">
+                    <img src="https://images.unsplash.com/photo-1539625319135-8d6f74a0c8b2?auto=format&fit=crop&w=300&q=80" alt="Spinning Vinyl Record" class="retro-vinyl" id="retro-vinyl-img">
+                    <div class="vinyl-center"></div>
+                  </div>
+                  <div class="retro-era-badge" id="retro-era-badge">80s SYNTH-POP KID</div>
+                  <h4 class="retro-era-title mt-3" id="retro-era-title">Classic Decades Alignment</h4>
+                  <p class="retro-era-desc mt-2" id="retro-era-desc">Your profile has a unique connection to older releases, bringing the vibes of previous generations back to life.</p>
+                </div>
+                
+                <!-- Right side: Decade breakdown progress bars -->
+                <div class="decade-stats-panel flex-1">
+                  <h4 class="sub-panel-title mb-4">Decade Distribution</h4>
+                  <div id="decade-progress-list" class="decade-progress-list">
+                    <!-- Progress bars injected via ui.js -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB CONTENT: VIBE MATCHER -->
+          <section id="matcher-tab" class="tab-pane">
+            <div class="glass-panel">
+              <h3 class="panel-title mb-2">Vibe Matcher</h3>
+              <p class="panel-subtitle mb-6">Generate your secret Vibe Key to share with friends, or paste theirs to test your compatibility.</p>
+              
+              <div class="vibe-matcher-row">
+                <!-- Left side: Keys Configuration -->
+                <div class="matcher-setup-panel flex-1">
+                  <div class="matcher-group mb-6">
+                    <label class="form-label">Your Vibe Key</label>
+                    <p class="form-tip mb-2">Copy this code and send it to a friend so they can see how you match!</p>
+                    <div class="key-copy-row">
+                      <input type="text" id="my-vibe-key" class="text-input" readonly value="Generating...">
+                      <button id="btn-copy-vibe-key" class="btn-primary flex-center">Copy Key</button>
+                    </div>
+                  </div>
+                  
+                  <div class="matcher-group">
+                    <label class="form-label">Compare with a Friend</label>
+                    <p class="form-tip mb-2">Paste your friend's SoundVibe Key below to check your music compatibility.</p>
+                    <div class="key-copy-row">
+                      <input type="text" id="friend-vibe-key" class="text-input" placeholder="e.g. SV-QWxleHxFbGVjdHJvb..." />
+                      <button id="btn-compare-vibe" class="btn-secondary flex-center">Compare</button>
+                    </div>
+                    <div id="matcher-error" class="matcher-error-msg mt-2 hidden" style="color: #ef4444; font-size: 0.85rem;">Invalid Vibe Key. Make sure it starts with "SV-"</div>
+                  </div>
+                </div>
+                
+                <!-- Right side: Match Results (hidden until checked) -->
+                <div class="matcher-results-panel flex-1 hidden" id="matcher-results">
+                  <div class="match-score-card text-center mb-6">
+                    <div class="match-percentage-circle">
+                      <span class="match-score-val" id="match-score-val">87%</span>
+                      <span class="match-score-label">MATCH</span>
+                    </div>
+                    <h3 class="match-title mt-4" id="match-title">Sonic Soulmates</h3>
+                    <p class="match-desc mt-2" id="match-desc">Your sound signatures align perfectly. You share similar tempos, rhythm energy, and acoustic preferences.</p>
+                  </div>
+                  
+                  <!-- Radar Comparison Canvas -->
+                  <div class="dual-chart-wrapper">
+                    <h4 class="text-center mb-3 text-dim">Sound Comparison DNA</h4>
+                    <div class="chart-container-sm" style="position: relative; height: 260px;">
+                      <canvas id="dual-radar-chart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB CONTENT: PERSONALITY -->
+          <section id="personality-tab" class="tab-pane">
+            <div class="personality-tab-row">
+              
+              <!-- Left side: Explanation & Action -->
+              <div class="personality-details-panel flex-1">
+                <h3 class="panel-title mb-2">Music Personality Card</h3>
+                <p class="panel-subtitle mb-6">A custom, high-resolution aesthetic summary of your musical soul. Save it as an image to share on social media.</p>
+
+                <div class="benefits-list mb-6">
+                  <div class="benefit-item">
+                    <span class="check-icon">✓</span>
+                    <span>High-DPI 800x1200 card, ideal for Instagram Stories.</span>
+                  </div>
+                  <div class="benefit-item">
+                    <span class="check-icon">✓</span>
+                    <span>Generates custom color themes based on your musical genre.</span>
+                  </div>
+                  <div class="benefit-item">
+                    <span class="check-icon">✓</span>
+                    <span>Calculates energy, happiness, and danceability indicators.</span>
+                  </div>
+                </div>
+
+                <button id="btn-download-card" class="btn-primary flex-center w-100 py-3">
+                  <i data-lucide="share-2" class="icon-sm"></i>
+                  <span>Download Shareable Card (PNG)</span>
+                </button>
+              </div>
+
+              <!-- Right side: Visual Preview of Card -->
+              <div class="personality-preview-panel flex-1 center-flex">
+                <div class="card-preview-frame">
+                  <!-- Interactive HTML Render of the card -->
+                  <div id="card-preview-container" class="card-preview-inner">
+                    <!-- Loaded dynamically in ui.js -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hidden high-resolution Canvas used for export -->
+            <canvas id="shareable-card-canvas" style="display:none;"></canvas>
+          </section>
+
+          <!-- TAB CONTENT: SEARCH MUSIC -->
+          <section id="search-tab" class="tab-pane">
+            <div class="glass-panel">
+              <h3 class="panel-title mb-2">Search Music</h3>
+              <p class="panel-subtitle mb-6">Search for any track on Spotify and play it instantly using our background stream engine.</p>
+              
+              <div class="search-input-wrapper mb-6" style="position: relative; display: flex; align-items: center;">
+                <i data-lucide="search" style="position: absolute; left: 16px; color: var(--text-secondary); pointer-events: none; width: 20px; height: 20px;"></i>
+                <input type="text" id="search-music-input" class="text-input" placeholder="Search tracks, artists, or albums..." style="padding-left: 48px; width: 100%; height: 50px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-glass); border-radius: 12px; font-size: 1rem; color: #fff; outline: none; transition: var(--transition-quick);" />
+              </div>
+              
+              <div id="search-results-container" class="search-results-list list-container">
+                <div class="empty-state">Type something above to search for tracks...</div>
+              </div>
+            </div>
+          </section>
+
+        </main>
+
+        <!-- Persistent bottom player bar (Glassmorphic dashboard footer) -->
+        <div id="music-player-bar" class="player-bar-container hidden">
+          <!-- Progress bar on top of the player bar -->
+          <div class="player-progress-container" id="player-seek-container">
+            <div class="player-progress-bar" id="player-seek-fill" style="width: 0%;"></div>
+            <div class="player-progress-handle" id="player-seek-handle" style="left: 0%;"></div>
+          </div>
+          
+          <div class="player-bar-inner">
+            <!-- Left section: Currently playing song details -->
+            <div class="player-song-details">
+              <div class="player-album-art-wrapper">
+                <img id="player-album-art" src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=80&q=80" alt="Album Art">
+              </div>
+              <div class="player-song-info">
+                <div class="player-song-title" id="player-song-title">Not Playing</div>
+                <div class="player-song-artist" id="player-song-artist">Choose a track to play</div>
+              </div>
+            </div>
+            
+            <!-- Center section: Controls -->
+            <div class="player-controls">
+              <button class="player-btn" id="player-btn-prev" aria-label="Previous Track">
+                <i data-lucide="chevron-left"></i>
+              </button>
+              <button class="player-btn btn-play-main" id="player-btn-play-pause" aria-label="Play/Pause">
+                <i data-lucide="play" id="player-play-icon"></i>
+              </button>
+              <button class="player-btn" id="player-btn-next" aria-label="Next Track">
+                <i data-lucide="chevron-right"></i>
+              </button>
+            </div>
+            
+            <!-- Right section: Volume and Time -->
+            <div class="player-extra-controls">
+              <span class="player-time-display" id="player-time-display">0:00 / 0:00</span>
+              <div class="player-volume-wrapper">
+                <i data-lucide="activity" class="volume-icon"></i>
+                <input type="range" id="player-volume-slider" min="0" max="100" value="80" class="volume-slider">
+              </div>
+            </div>
+          </div>
+          <audio id="global-audio-element" style="display: none;"></audio>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- App Scripts Entry Point -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

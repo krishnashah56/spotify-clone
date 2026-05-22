@@ -26,5 +26,10 @@ export default defineConfig({
         secure: false
       }
     }
+  },
+  define: {
+    // Inject backend URL for production (Railway URL)
+    __BACKEND_URL__: JSON.stringify(process.env.VITE_BACKEND_URL || '')
   }
 });
+

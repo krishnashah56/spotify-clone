@@ -4,6 +4,7 @@ import urllib.parse
 import requests
 import yt_dlp
 from flask import Flask, request, redirect, session, jsonify, send_from_directory
+from flask_cors import CORS
 from dotenv import load_dotenv
 
 # Load environment variables from .env
@@ -12,9 +13,19 @@ load_dotenv()
 app = Flask(__name__, static_folder='dist', static_url_path='/')
 app.secret_key = os.getenv('FLASK_SECRET_KEY', 'soundvibe_super_secret_session_key')
 
-# Session cookie config - allow sharing across ports on same localhost domain
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-app.config['SESSION_COOKIE_SECURE'] = False
+# CORS: Allow Vercel frontend + local dev to access the Flask API
+allowed_origins = [
+    os.getenv('FRONTEND_URL', ''),          # e.g. https://your-app.vercel.app
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+]
+allowed_origins = [o for o in allowed_origins if o]  # remove empty strings
+CORS(app, origins=allowed_origins, supports_credentials=True)
+
+# Session cookie config
+IS_PRODUCTION = os.getenv('RAILWAY_ENVIRONMENT') or os.getenv('RAILWAY_PROJECT_ID')
+app.config['SESSION_COOKIE_SAMESITE'] = 'None' if IS_PRODUCTION else 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = bool(IS_PRODUCTION)  # True on Railway (HTTPS), False locally
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 
 SCOPES = 'user-read-private user-read-email user-top-read user-read-recently-played'

@@ -2,6 +2,11 @@
  * spotify.js - Spotify OAuth PKCE Flow and API Wrapper
  */
 
+// In production (Vercel), BACKEND_URL = Railway URL. In dev, it's empty (uses Vite proxy)
+const BACKEND_URL = (typeof __BACKEND_URL__ !== 'undefined' && __BACKEND_URL__) 
+  ? __BACKEND_URL__ 
+  : '';
+
 // Spotify authorization scopes needed for the app
 const SCOPES = [
   'user-read-private',
@@ -39,7 +44,8 @@ function base64urlencode(a) {
  * Initiate Spotify OAuth Flow via Backend
  */
 export async function redirectToSpotifyAuth(clientId, redirectUri) {
-  const loginUrl = new URL('/login', window.location.origin);
+  const base = BACKEND_URL || window.location.origin;
+  const loginUrl = new URL('/login', base);
   if (clientId) {
     loginUrl.searchParams.set('client_id', clientId);
   }
@@ -58,7 +64,7 @@ export async function getAccessToken(code) {
  */
 export async function getValidAccessToken() {
   try {
-    const response = await fetch('/api/auth-check');
+    const response = await fetch(`${BACKEND_URL}/api/auth-check`, { credentials: 'include' });
     const data = await response.json();
     if (data.authenticated) {
       return 'backend_authenticated';
@@ -77,7 +83,7 @@ export function logoutSpotify() {
   window.localStorage.removeItem('spotify_refresh_token');
   window.localStorage.removeItem('spotify_token_expires_at');
   // Clear Flask backend session
-  fetch('/logout').catch(err => console.error('Failed to logout from backend:', err));
+  fetch(`${BACKEND_URL}/logout`, { credentials: 'include' }).catch(err => console.error('Failed to logout from backend:', err));
 }
 
 /**
@@ -89,8 +95,8 @@ async function spotifyFetch(endpoint) {
     throw new Error('Not authenticated with Spotify');
   }
 
-  // Fetch through our local Flask API proxy
-  const response = await fetch(`/api/spotify/${endpoint}`);
+  // Fetch through Flask API proxy (Railway in production, local in dev)
+  const response = await fetch(`${BACKEND_URL}/api/spotify/${endpoint}`, { credentials: 'include' });
 
   if (response.status === 401) {
     logoutSpotify();

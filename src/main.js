@@ -3,6 +3,11 @@
  * Handles state, routing, Spotify API callbacks, and binding events.
  */
 import './style.css';
+// BACKEND_URL: Railway URL in production (Vercel), empty in development (uses Vite proxy)
+const BACKEND_URL = (typeof __BACKEND_URL__ !== 'undefined' && __BACKEND_URL__) 
+  ? __BACKEND_URL__ 
+  : '';
+
 import { 
   redirectToSpotifyAuth, 
   getAccessToken, 
@@ -177,7 +182,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           renderSearchResults(filtered);
         } else {
           try {
-            const res = await fetch(`/api/spotify/search?q=${encodeURIComponent(query)}&type=track&limit=20`);
+            const res = await fetch(`${BACKEND_URL}/api/spotify/search?q=${encodeURIComponent(query)}&type=track&limit=20`, { credentials: 'include' });
             const data = await res.json();
             const tracks = data.tracks?.items || [];
             appState.searchResults = tracks;
@@ -906,7 +911,7 @@ async function playTrackAtIndex(index) {
   }
 
   try {
-    const res = await fetch(`/api/play?track=${encodeURIComponent(track.name)}&artist=${encodeURIComponent(artistNames)}`);
+    const res = await fetch(`${BACKEND_URL}/api/play?track=${encodeURIComponent(track.name)}&artist=${encodeURIComponent(artistNames)}`, { credentials: 'include' });
     const data = await res.json();
 
     if (data.error || !data.url) {
